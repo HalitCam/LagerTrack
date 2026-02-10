@@ -20,6 +20,12 @@ const UserSchema = new Schema({
 		default: "user",
 		enum: ["user", "admin"],
 	},
+	reports:{
+		type: Date,
+	},
+	entryDate:{
+		type: Date
+	}
 });
 
 UserSchema.pre("save", async function (next) {

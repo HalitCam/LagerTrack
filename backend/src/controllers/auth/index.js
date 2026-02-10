@@ -25,7 +25,7 @@ const Register = async (req, res, next) => {
 		const isExists = await User.findOne({ email: input.email });
 
 		if (isExists) {
-			return next(Boom.conflict("This e-mail already using."));
+			return next(Boom.conflict("Diese Email wird schon benutzt!"));
 		}
 
 		const user = new User(input);
@@ -64,12 +64,12 @@ const Login = async (req, res, next) => {
 		const user = await User.findOne({ email: input.email });
 
 		if (!user) {
-			throw Boom.notFound("The email address was not found.");
+			throw Boom.notFound("Diese Email wurde nicht gefunden!");
 		}
 
 		const isMatched = await user.isValidPass(input.password);
 		if (!isMatched) {
-			throw Boom.unauthorized("email or password not correct");
+			throw Boom.unauthorized("Email oder Kennwort ist nicht correct!");
 		}
 
 		const accessToken = await signAccessToken({
