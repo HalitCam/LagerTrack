@@ -12,8 +12,12 @@ import Home from './pages/Home';
 import Calender from './pages/Calender';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
+import Profile from './pages/Profile';
+import ProtectedRoute from './pages/ProtectedRoute';
+import { useAuth } from './contexts/AuthContext';
 
 function App() {
+  const { loggedIn } = useAuth();
   return (
     <Router>
       <div>
@@ -28,6 +32,12 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             <Route path="/" element={<Home />} />
+            <Route path="/profile" element={
+              <ProtectedRoute isAuthenticated={loggedIn}>
+                <Profile />
+              </ProtectedRoute>
+            }
+            />
 
           </Routes>
         </div>

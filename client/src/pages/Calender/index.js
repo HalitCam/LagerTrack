@@ -8,7 +8,7 @@ export default function MyCalendar() {
 
     return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <Text as='Heading'>Pick a Date</Text>
+            <Text as="h2" fontSize="xl" fontWeight="bold">Pick a Date</Text>
             <Calendar
                 onChange={setDate}
                 value={date}
