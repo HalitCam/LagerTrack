@@ -31,3 +31,6 @@
 .nav .left .menu li a:hover {
     color: black;
 }
+.nav .right Button {
+    margin-left: 15px;
+}

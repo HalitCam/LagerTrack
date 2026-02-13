@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'antd/dist/antd.css';
 import './index.css';
 import './reset.css';
 import App from './App';
@@ -9,7 +10,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 //contexts
-import {AuthProvider} from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import {BasketContextProvider} from "./contexts/BasketContext";
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const queryClient = new QueryClient({
@@ -25,7 +28,9 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <ChakraProvider >
         <AuthProvider>
-          <App />
+          <BasketContextProvider>
+            <App />
+          </BasketContextProvider>
         </AuthProvider>
       </ChakraProvider>
       <ReactQueryDevtools initialIsOpen={false} />

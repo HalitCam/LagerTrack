@@ -15,7 +15,7 @@ const Signup = () => {
 
     const formik = useFormik({
         initialValues: {
-            email: "",
+            username: "",
             password: "",
             passwordConfirm: "",
         },
@@ -24,7 +24,7 @@ const Signup = () => {
         onSubmit: async (values, bag) => {
             try {
                 const registerResponse = await fetchRegister({
-                    email: values.email,
+                    username: values.username,
                     password: values.password
                 })
                 login(registerResponse)
@@ -54,27 +54,27 @@ const Signup = () => {
                     <Box my={5} mt={10} textAlign="left">
                         <form onSubmit={formik.handleSubmit} autoComplete="off">
                             <FormControl>
-                                <FormLabel>E-mail:</FormLabel>
+                                <FormLabel>Benutzername:</FormLabel>
                                 <Input
-                                    name='email'
-                                    type='email'
-                                    placeholder='E-Mail-Adresse'
+                                    name='username'
+                                    type='text'
+                                    placeholder='Username'
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    value={formik.values.email}
-                                    isInvalid={formik.touched.email && formik.errors.email}
+                                    value={formik.values.username}
+                                    isInvalid={formik.touched.username && formik.errors.username}
 
                                 />
-                                {formik.touched.email && formik.errors.email && (
-                                    <Alert status="error">{formik.errors.email}</Alert>
+                                {formik.touched.username && formik.errors.username && (
+                                    <Alert status="error">{formik.errors.username}</Alert>
                                 )}
                             </FormControl >
                             <FormControl mt="4">
-                                <FormLabel>Passwort</FormLabel>
+                                <FormLabel>Kennwort:</FormLabel>
                                 <Input
                                     name='password'
                                     type={showPassword ? "text" : "password"}
-                                    placeholder='Kennwort'
+                                    placeholder='Password'
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.password}
@@ -85,12 +85,12 @@ const Signup = () => {
                                 )}
                             </FormControl>
                             <FormControl mt="4">
-                                <FormLabel>Passwort bestätigen</FormLabel>
+                                <FormLabel>Kennwort bestätigen:</FormLabel>
                                 <Flex >
                                     <Input
                                         name='passwordConfirm'
                                         type={showPassword ? "text" : "password"}
-                                         placeholder='Kennwort Wiederholen'
+                                         placeholder='Password again'
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                         value={formik.values.passwordConfirm}

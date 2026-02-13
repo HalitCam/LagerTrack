@@ -39,3 +39,12 @@ export const fetchLogin = async (input) => {
     const {data} = await axios.post(`${process.env.REACT_APP_BASE_ENDPOINT}/auth/login`, input);
     return data;
 }
+export const fetchCreateTask = async (input) =>{
+    const {data} = await axios.post(`${process.env.REACT_APP_BASE_ENDPOINT}/task`, input);
+    return data;
+}
+
+export const fetchTask = async () => {
+    const {data} = await axios.get(`${process.env.REACT_APP_BASE_ENDPOINT}/task`);
+    return data;
+}

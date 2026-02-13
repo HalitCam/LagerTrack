@@ -1,4 +1,5 @@
-import React from 'react';
+import React , {useState} from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Button, Flex, Box, Input, FormLabel, Heading, Alert, FormControl } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import SigninValidation from './validations';
@@ -9,17 +10,18 @@ import { useNavigate } from 'react-router-dom';
 const Signin = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
+     const [showPassword, setShowPassword] = useState(false);
 
     const formik = useFormik({
         initialValues: {
-            email: "",
+            username: "",
             password: "",
         },
         validationSchema: SigninValidation,
         onSubmit: async (values, bag) => {
             try {
                 const loginResponse = await fetchLogin({
-                    email: values.email,
+                    username: values.username,
                     password: values.password
                 })
                 login(loginResponse);
@@ -48,35 +50,39 @@ const Signin = () => {
                 <Box my={5} mt={10} textAlign="left">
                     <form onSubmit={formik.handleSubmit} autoComplete="off">
                         <FormControl mb={4}>
-                            <FormLabel htmlFor='email' > Email: </FormLabel>
+                            <FormLabel htmlFor='username' > Benutzername: </FormLabel>
                             <Input
-                                id='email'
-                                type='email'
-                                placeholder='Enter your email'
-                                name="email"
-                                value={formik.values.email}
+                                id='username'
+                                type="text"
+                                placeholder='Username'
+                                name="username"
+                                value={formik.values.username}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                autoComplete='email'
                             />
                         </FormControl>
 
-                        {formik.touched.email && formik.errors.email && (
-                            <Alert status="error">{formik.errors.email}</Alert>
+                        {formik.touched.username && formik.errors.username && (
+                            <Alert status="error">{formik.errors.username}</Alert>
                         )}
 
                         <FormControl mb={4}>
-                            <FormLabel htmlFor='password' > Password: </FormLabel>
-                            <Input
-                                id="password"
-                                type='password'
-                                placeholder='Enter your password'
-                                name="password"
-                                value={formik.values.password}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                autoComplete='new-password'
-                            />
+                            <FormLabel htmlFor='password' > Kennwort: </FormLabel>
+                            <Flex>
+                                <Input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder='Enter your password'
+                                    name="password"
+                                    value={formik.values.password}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    autoComplete='new-password'
+                                />
+                                <Button type="button" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </Button>
+                            </Flex>
                         </FormControl>
 
                         {formik.touched.password && formik.errors.password && (

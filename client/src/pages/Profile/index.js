@@ -13,7 +13,7 @@ const Profile = () => {
     }
     return (
         <div>
-            <Heading my="10" display="flex" justifyContent="center" size="2xl">{`Herzlich willkommen ${user?.email || ''} `}</Heading>
+            <Heading my="10" display="flex" justifyContent="center" size="2xl">{`Herzlich willkommen ${user?.username || ''} `}</Heading>
             {user && <code>{JSON.stringify(user)}</code>}
             <br /><br />
             <Button onClick={handleLogout} colorScheme="pink" variant="solid">
