@@ -2,7 +2,7 @@ import React from 'react';
 import { FieldArray, useFormik } from "formik";
 import { Box, Text, FormControl, FormLabel, Input, Textarea, Button, Flex } from "@chakra-ui/react";
 import validationNew from './validation';
-import { fetchCreateTask } from '../../api';
+import { fetchCreateTask } from '../../../api';
 import { message } from "antd";
 
 
@@ -15,6 +15,7 @@ const NewTask = () => {
             productquantity: "",
             boxquantity: "",
             createdAt: "",
+            reponsible:"",
         },
 
         validationSchema: validationNew,

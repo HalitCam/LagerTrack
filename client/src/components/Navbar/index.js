@@ -6,11 +6,19 @@ import { Button, Image } from "@chakra-ui/react"
 import styles from './styles.module.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBasketContext } from '../../contexts/BasketContext';
+import {fetchTask} from '../../api';
+import { useQuery } from '@tanstack/react-query';
 
 const Navbar = () => {
   const { loggedIn, user } = useAuth();
-  const { fba } = useBasketContext();
-console.log(user)
+  const {data=[] , isLoading} = useQuery({queryKey: ["admin:task"], queryFn: fetchTask});
+  
+  if(isLoading) return (<div>Loading..</div>)
+
+  const filteredData = data?.filter((item) => item.responsible?.toString() === user?._id?.toString());
+  console.log(filteredData)
+  const restTask = data?.filter((item)=> (item.responsible === null));
+
   return (
     <nav className={styles.nav}>
       <div className={styles.left}>
@@ -26,7 +34,7 @@ console.log(user)
             <Link to='/calender'>Kalender</Link>
           </li>
           <li>
-            <Link to='/task'>Aufgaben</Link>
+            <Link to='/task'>Aufgaben({restTask.length})</Link>
           </li>
         </ul>
       </div>
@@ -56,10 +64,10 @@ console.log(user)
               )
             }
               {
-                fba.length > 0 && (
+                filteredData.length > 0 && (
                   <Link to="/basket">
                     <Button colorScheme="pink" variant="outline">
-                      Übernahme ({fba.length})
+                      Übernahme ({filteredData.length})
                     </Button>
                   </Link>
                 )

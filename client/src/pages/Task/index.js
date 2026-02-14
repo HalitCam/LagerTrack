@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
-import { useQuery } from '@tanstack/react-query';
-import { fetchTask } from '../../api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchTask, fetchUpdateTask } from '../../api';
 import { Text, Button } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from "react-router-dom";
@@ -10,11 +10,19 @@ import moment from 'moment';
 
 
 
-const Task = () => {
-    const { loggedIn } = useAuth();
-    const { addToBasket } = useBasketContext();
 
+const Task = () => {
+    const { loggedIn, user } = useAuth();
+    const { addToBasket } = useBasketContext();
+    const queryClient = useQueryClient();
     const { isLoading, isError, data, error } = useQuery({ queryKey: ['admin:task'], queryFn: fetchTask });
+
+    const mutation = useMutation({
+        mutationFn: ({ id, body }) => fetchUpdateTask(id, body),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin:task']);
+        }
+    });
     console.log(data)
 
     if (isLoading) {
@@ -55,20 +63,36 @@ const Task = () => {
                 title: 'Aktion',
                 dataIndex: 'action',
                 key: 'action',
-                render: (text, record) => (
-                    <>
-                        <Button onClick={() => addToBasket(record._id)}>Übernahme</Button>
-                    </>
-                )
+                render: (text, record) => {
+                    const handleTake = async () => {
+                        // set responsible to current user
+                        if (!user || !user._id) return;
+                        mutation.mutate({ id: record._id, body: { responsible: user._id } });
+                        addToBasket(record._id);
+                    };
+
+                    return (
+                        <>
+                            <Button onClick={handleTake}> Übernahme</Button>
+                        </>
+                    )
+                }
             }]
             : [])
 
     ]
 
+
+
     return (
         <div>
             <Text fontSize="2xl" p="5">Aufgaben</Text>
-            <Table dataSource={data.map(item => ({...item, createdAt: moment(item.createdAt).format('DD/MM/YYYY')}))} columns={columns} rowKey="_id" />
+            <Table dataSource={data
+                .filter(item => !item.responsible)
+                .map(item => ({
+                    ...item,
+                    createdAt: moment(item.createdAt).format('DD/MM/YYYY')
+                }))} columns={columns} rowKey="_id" />
         </div>
     )
         ;

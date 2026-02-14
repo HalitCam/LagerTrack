@@ -6,6 +6,7 @@ const validationNew = yup.object().shape({
     productquantity : yup.number().required(),
     boxquantity : yup.number().required(),
     createdAt : yup.date(),
+    responsible : yup.string(),
 })
 
 export default validationNew ; 

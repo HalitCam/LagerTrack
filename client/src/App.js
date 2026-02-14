@@ -16,7 +16,7 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './pages/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
 import Task from './pages/Task';
-import NewTask from './pages/TaskCreate';
+import NewTask from './pages/Admin/TaskCreate';
 
 function App() {
   const { loggedIn } = useAuth();
