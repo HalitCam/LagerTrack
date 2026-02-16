@@ -17,6 +17,7 @@ import ProtectedRoute from './pages/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
 import Task from './pages/Task';
 import NewTask from './pages/Admin/TaskCreate';
+import GetTasks from './pages/User/GetTasks';
 
 function App() {
   const { loggedIn } = useAuth();
@@ -42,6 +43,7 @@ function App() {
             />
             <Route path="/task" element={<Task/>} />
             <Route path="/task/create" element={<NewTask/>}/>
+            <Route path = "/basket" element={<GetTasks/>}/>
 
           </Routes>
         </div>

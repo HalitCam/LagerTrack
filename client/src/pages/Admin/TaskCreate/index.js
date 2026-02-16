@@ -72,8 +72,8 @@ const NewTask = () => {
                     </FormControl>
 
                     <Flex my="10"  justifyContent="center" >
-                        <Button type="button" onClick={formik.handleReset}>Zurücksetzen</Button>
-                        <Button marginLeft={15} type='submit'>Erstellen</Button>
+                        <Button colorScheme='red' type="button" onClick={formik.handleReset}>Zurücksetzen</Button>
+                        <Button colorScheme='green' marginLeft={15} type='submit'>Erstellen</Button>
                     </Flex>
 
                 </form>

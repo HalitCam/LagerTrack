@@ -15,7 +15,7 @@ const Navbar = () => {
   
   if(isLoading) return (<div>Loading..</div>)
 
-  const filteredData = data?.filter((item) => item.responsible?.toString() === user?._id?.toString());
+  const filteredData = data?.filter((item) => (item.responsible?.toString() === user?._id?.toString() && item.completed !== true));
   console.log(filteredData)
   const restTask = data?.filter((item)=> (item.responsible === null));
 
@@ -72,6 +72,15 @@ const Navbar = () => {
                   </Link>
                 )
               }
+               {
+              user.role === "admin" && (
+                <Link to="/performance" >
+                  <Button colorScheme="orange" variant="outline">
+                      Mitarbeiter-Tracking
+                  </Button>
+                </Link>
+              )
+            }
               <Link to='/profile'>
                 <Button style={{ marginRight: '10px' }} >Profile</Button>
               </Link>

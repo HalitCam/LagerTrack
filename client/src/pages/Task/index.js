@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchTask, fetchUpdateTask } from '../../api';
@@ -15,7 +15,7 @@ const Task = () => {
     const { loggedIn, user } = useAuth();
     const { addToBasket } = useBasketContext();
     const queryClient = useQueryClient();
-    const { isLoading, isError, data, error } = useQuery({ queryKey: ['admin:task'], queryFn: fetchTask });
+    const { isLoading, isError, data, error } = useQuery({ queryKey: ['admin:task'], queryFn: fetchTask, refetchOnMount: true });
 
     const mutation = useMutation({
         mutationFn: ({ id, body }) => fetchUpdateTask(id, body),

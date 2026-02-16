@@ -53,3 +53,9 @@ export const fetchTask = async () => {
     const {data} = await axios.get(`${process.env.REACT_APP_BASE_ENDPOINT}/task`);
     return data;
 }
+
+export const fetchCompleteTask = async (id, input) => {
+    const { data } = await axios.put(`${process.env.REACT_APP_BASE_ENDPOINT}/task/${id}`, input);
+    return data;
+}
+
