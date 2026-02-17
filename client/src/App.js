@@ -18,6 +18,7 @@ import { useAuth } from './contexts/AuthContext';
 import Task from './pages/Task';
 import NewTask from './pages/Admin/TaskCreate';
 import GetTasks from './pages/User/GetTasks';
+import EmployeeTracking from './pages/Admin/EmployeeTracking';
 
 function App() {
   const { loggedIn } = useAuth();
@@ -44,6 +45,7 @@ function App() {
             <Route path="/task" element={<Task/>} />
             <Route path="/task/create" element={<NewTask/>}/>
             <Route path = "/basket" element={<GetTasks/>}/>
+            <Route path="/performance" element ={<EmployeeTracking/>}/> 
 
           </Routes>
         </div>

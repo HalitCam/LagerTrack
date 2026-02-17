@@ -29,6 +29,7 @@ const NewTask = () => {
                     kartonType: values.kartonType,
                     productquantity: Number(values.productquantity),
                     boxquantity: Number(values.boxquantity),
+                    createdAt: values.createdAt,
                 });
 
                 message.success({ content: "Erfolgreich erstellt!", key: "task_new" });

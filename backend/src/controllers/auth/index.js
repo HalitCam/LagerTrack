@@ -22,10 +22,10 @@ const Register = async (req, res, next) => {
 	}
 
 	try {
-		const isExists = await User.findOne({ email: input.email });
+		const isExists = await User.findOne({ username: input.username });
 
 		if (isExists) {
-			return next(Boom.conflict("Diese Email wird schon benutzt!"));
+			return next(Boom.conflict("Diese Benutzername wird schon benutzt!"));
 		}
 
 		const user = new User(input);
@@ -61,15 +61,15 @@ const Login = async (req, res, next) => {
 	}
 
 	try {
-		const user = await User.findOne({ email: input.email });
+		const user = await User.findOne({ username: input.username });
 
 		if (!user) {
-			throw Boom.notFound("Diese Email wurde nicht gefunden!");
+			throw Boom.notFound("Diese Benutzername wurde nicht gefunden!");
 		}
 
 		const isMatched = await user.isValidPass(input.password);
 		if (!isMatched) {
-			throw Boom.unauthorized("Email oder Kennwort ist nicht correct!");
+			throw Boom.unauthorized("Benutzername oder Kennwort ist nicht correct!");
 		}
 
 		const accessToken = await signAccessToken({
@@ -97,7 +97,15 @@ const RefreshToken = async (req, res, next) => {
 		}
 
 		const user_id = await verifyRefreshToken(refresh_token);
-		const accessToken = await signAccessToken(user_id);
+		// fetch user to include role in the new access token
+		const user = await User.findById(user_id);
+		if (!user) {
+			throw Boom.notFound("User not found");
+		}
+		const accessToken = await signAccessToken({
+			user_id: user._id,
+			role: user.role,
+		});
 		const refreshToken = await signRefreshToken(user_id);
 
 		res.json({ accessToken, refreshToken });

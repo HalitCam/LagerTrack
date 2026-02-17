@@ -1,4 +1,4 @@
-import Product from "../../models/product";
+import Task from "../../models/task";
 import Boom from "boom";
 import ProductSchema from "./validations";
 
@@ -11,10 +11,8 @@ const Create = async (req, res, next) => {
 	}
 
 	try {
-		input.photos = JSON.parse(input.photos);
-
-		const product = new Product(input);
-		const savedData = await product.save();
+		const task = new Task(input);
+		const savedData = await task.save();
 
 		res.json(savedData);
 	} catch (e) {
@@ -23,26 +21,26 @@ const Create = async (req, res, next) => {
 };
 
 const Get = async (req, res, next) => {
-	const { product_id } = req.params;
+	const { task_id } = req.params;
 
-	if (!product_id) {
-		return next(Boom.badRequest("Missing paramter (:product_id)"));
+	if (!task_id) {
+		return next(Boom.badRequest("Missing paramter (:task_id)"));
 	}
 
 	try {
-		const product = await Product.findById(product_id);
+		const task = await Task.findById(task_id);
 
-		res.json(product);
+		res.json(task);
 	} catch (e) {
 		next(e);
 	}
 };
 
 const Update = async (req, res, next) => {
-	const { product_id } = req.params;
+	const { task_id } = req.params;
 
 	try {
-		const updated = await Product.findByIdAndUpdate(product_id, req.body, {
+		const updated = await Task.findByIdAndUpdate(task_id, req.body, {
 			new: true,
 		});
 
@@ -53,13 +51,13 @@ const Update = async (req, res, next) => {
 };
 
 const Delete = async (req, res, next) => {
-	const { product_id } = req.params;
+	const { task_id } = req.params;
 
 	try {
-		const deleted = await Product.findByIdAndDelete(product_id);
+		const deleted = await Task.findByIdAndDelete(task_id);
 
 		if (!deleted) {
-			throw Boom.badRequest("Product not found.");
+			throw Boom.badRequest("Task not found.");
 		}
 
 		res.json(deleted);
@@ -79,12 +77,12 @@ const GetList = async (req, res, next) => {
 	const skip = (parseInt(page) - 1) * limit;
 
 	try {
-		const products = await Product.find({})
+		const tasks = await Task.find({})
 			.sort({ createdAt: -1 })
 			.skip(skip)
 			.limit(limit);
 
-		res.json(products);
+		res.json(tasks);
 	} catch (e) {
 		next(e);
 	}

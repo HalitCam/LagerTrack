@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-	email: {
+	username: {
 		type: String,
 		required: true,
 		unique: true,
@@ -20,12 +20,6 @@ const UserSchema = new Schema({
 		default: "user",
 		enum: ["user", "admin"],
 	},
-	reports:{
-		type: Date,
-	},
-	entryDate:{
-		type: Date
-	}
 });
 
 UserSchema.pre("save", async function (next) {

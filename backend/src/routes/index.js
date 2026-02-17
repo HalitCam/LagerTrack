@@ -5,7 +5,7 @@ import { verifyAccessToken } from '../helpers/jwt';
 
 // routes
 import auth from './auth';
-import product from './product';
+import task from './task';
 import order from './order';
 
 const router = Router();
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 });
 
 router.use('/auth', auth);
-router.use('/product', product);
+router.use('/task', task);
 router.use('/order', verifyAccessToken, order);
 
 export default router;

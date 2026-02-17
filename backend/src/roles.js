@@ -1,9 +1,15 @@
 import AccessControl from 'accesscontrol';
 const ac = new AccessControl();
 
-exports.roles = (function () {
-  ac.grant('user').readAny('product');
-  ac.grant('admin').extend('user').createAny('product');
+// Define permissions for resources used in the app
+ac.grant('user')
+  .readAny('task');
 
-  return ac;
-})();
+ac.grant('admin')
+  .extend('user')
+  .createAny('task')
+  .updateAny('task')
+  .deleteAny('task')
+  .readAny('task');
+
+export const roles = ac;
