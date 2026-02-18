@@ -15,12 +15,14 @@ const NewTask = () => {
             productquantity: "",
             boxquantity: "",
             createdAt: "",
-            reponsible:"",
+            reponsible: "",
+            fbaEtiket: null,
+            dhlEtiket: null,
         },
 
         validationSchema: validationNew,
 
-            onSubmit: async (values, bag) => {
+        onSubmit: async (values, bag) => {
             console.log(formik.values);
             message.loading({ content: "Loading...", key: "product_new" });
             try {
@@ -67,12 +69,59 @@ const NewTask = () => {
                         {formik.touched.boxquantity && formik.errors.boxquantity && <Text color="red.400">{formik.errors.boxquantity}</Text>}
                     </FormControl>
                     <FormControl my="5">
+                        <FormLabel>FBA Etiket:</FormLabel>
+
+                        <Input
+                            width="8xl"
+                            name="fbaEtiket"
+                            type="file"
+                            accept="application/pdf"
+                            disabled={formik.isSubmitting}
+                            onChange={(event) => {
+                                formik.setFieldValue(
+                                    "fbaEtiket",
+                                    event.currentTarget.files[0]
+                                );
+                            }}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.fbaEtiket && formik.errors.fbaEtiket}
+                        />
+
+                        {formik.touched.fbaEtiket && formik.errors.fbaEtiket && (
+                            <Text color="red.400">{formik.errors.fbaEtiket}</Text>
+                        )}
+                    </FormControl>
+                    <FormControl my="5">
+                        <FormLabel>FBA Etiket:</FormLabel>
+
+                        <Input
+                            width="8xl"
+                            name="dhlEtiket"
+                            type="file"
+                            accept="application/pdf"
+                            disabled={formik.isSubmitting}
+                            onChange={(event) => {
+                                formik.setFieldValue(
+                                    "dhlEtiket",
+                                    event.currentTarget.files[0]
+                                );
+                            }}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.dhlEtiket && formik.errors.dhlEtiket}
+                        />
+
+                        {formik.touched.fbaEtiket && formik.errors.fbaEtiket && (
+                            <Text color="red.400">{formik.errors.fbaEtiket}</Text>
+                        )}
+                    </FormControl>
+
+                    <FormControl my="5">
                         <FormLabel>	Erstellungszeit:</FormLabel>
                         <Input name='createdAt' disabled={formik.isSubmitting} type='date' width="8xl" value={formik.values.createdAt} onChange={formik.handleChange} onBlur={formik.handleBlur} isInvalid={formik.touched.createdAt && formik.errors.createdAt} />
                         {formik.touched.createdAt && formik.errors.createdAt && <Text color="red.400">{formik.errors.createdAt}</Text>}
                     </FormControl>
 
-                    <Flex my="10"  justifyContent="center" >
+                    <Flex my="10" justifyContent="center" >
                         <Button colorScheme='red' type="button" onClick={formik.handleReset}>Zurücksetzen</Button>
                         <Button colorScheme='green' marginLeft={15} type='submit'>Erstellen</Button>
                     </Flex>

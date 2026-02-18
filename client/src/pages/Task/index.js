@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Popconfirm } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchTask, fetchUpdateTask } from '../../api';
+import { fetchTask, fetchUpdateTask, fetchDeleteTask } from '../../api';
 import { Text, Button } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from "react-router-dom";
@@ -17,13 +17,18 @@ const Task = () => {
     const queryClient = useQueryClient();
     const { isLoading, isError, data, error } = useQuery({ queryKey: ['admin:task'], queryFn: fetchTask, refetchOnMount: true });
 
-    const mutation = useMutation({
+    const takeMutation = useMutation({
         mutationFn: ({ id, body }) => fetchUpdateTask(id, body),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin:task']);
         }
     });
-    console.log(data)
+    const deleteMutation = useMutation ({
+        mutationFn: (id) => fetchDeleteTask (id) ,
+        onSuccess : () => {
+            queryClient.invalidateQueries("task");
+        }
+    })  
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -67,13 +72,29 @@ const Task = () => {
                     const handleTake = async () => {
                         // set responsible to current user
                         if (!user || !user._id) return;
-                        mutation.mutate({ id: record._id, body: { responsible: user._id } });
+                        takeMutation.mutate({ id: record._id, body: { responsible: user._id } });
                         addToBasket(record._id);
                     };
+                    const deleteTask = async() => {
+                        deleteMutation.mutate(record._id);
+                    }
 
                     return (
                         <>
-                            <Button onClick={handleTake}> Übernahme</Button>
+                            <Button colorScheme='green' variant="ghost" onClick={handleTake}> Übernahme</Button>
+                            {
+                                user.role === "admin" ? (
+                                    <Popconfirm
+                                    title="Wirklich löschen?"
+                                    description="Sind Sie sicher, diese Aufgabe zu löschen?"
+                                    cancelText="Nein" 
+                                    okText="Ja"
+                                    onConfirm={deleteTask}
+                                    >
+                                        <Button ml="5" colorScheme='red' variant="ghost" > Löschen </Button>
+                                    </Popconfirm>
+                                ) : null
+                            }
                         </>
                     )
                 }
