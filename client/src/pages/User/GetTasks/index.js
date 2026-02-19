@@ -73,11 +73,33 @@ const GetTasks = () => {
 
                 const handleCompleted = async () => {
 
-                    completeMutation.mutate({ id: record._id, data: { completed: true } });
+                    completeMutation.mutate({ id: record._id, data: { completed: true, completedAt: Date.now() } });
                 };
 
                 return (
                     <>
+                    {record.fbaEtiket && (
+                            <a
+                                href={`${process.env.REACT_APP_BASE_ENDPOINT.replace(/\/$/, '')}/uploads/${encodeURIComponent(record.fbaEtiket)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                download
+                            >
+                                <Button variant="outline" colorScheme="blue" mr={3}>FBA Etikett</Button>
+                            </a>
+                        )}
+
+                        {record.dhlEtiket && (
+                            <a
+                                href={`${process.env.REACT_APP_BASE_ENDPOINT.replace(/\/$/, '')}/uploads/${encodeURIComponent(record.dhlEtiket)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                download
+                            >
+                                <Button variant="outline" colorScheme="blue" mr={3}>DHL Etikett</Button>
+                            </a>
+                        )}
+
                         <Popconfirm
                          title="Bestätigen !"
                             description="Wirklich fertig?"
@@ -97,8 +119,8 @@ const GetTasks = () => {
                             onConfirm={giveBackTask}
                         >
                             <Button ml={5} colorScheme='red'> ablehnen </Button>
-
                         </Popconfirm>
+                        
                     </>
                 )
             }

@@ -40,7 +40,31 @@ export const fetchLogin = async (input) => {
     return data;
 }
 export const fetchCreateTask = async (input) =>{
-    const {data} = await axios.post(`${process.env.REACT_APP_BASE_ENDPOINT}/task`, input);
+    // if file objects are present, send multipart/form-data
+    let body = input;
+    let config = {};
+    const hasFiles = input && (input.fbaEtiket || input.dhlEtiket);
+
+    if (hasFiles) {
+        const form = new FormData();
+        Object.keys(input).forEach((key) => {
+            const val = input[key];
+            if (val === undefined || val === null) return;
+            // File objects from browser
+            if (typeof File !== 'undefined' && val instanceof File) {
+                form.append(key, val);
+            } else if (val && val._isAMomentObject) {
+                // moment objects (if any) -> toISOString
+                form.append(key, val.toISOString());
+            } else {
+                form.append(key, val);
+            }
+        });
+        body = form;
+        config = { headers: { 'Content-Type': 'multipart/form-data' } };
+    }
+
+    const {data} = await axios.post(`${process.env.REACT_APP_BASE_ENDPOINT}/task`, body, config);
     return data;
 }
 

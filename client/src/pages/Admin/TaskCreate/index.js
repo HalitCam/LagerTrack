@@ -32,6 +32,9 @@ const NewTask = () => {
                     productquantity: Number(values.productquantity),
                     boxquantity: Number(values.boxquantity),
                     createdAt: values.createdAt,
+                    fbaEtiket: values.fbaEtiket,
+                    dhlEtiket: values.dhlEtiket,
+
                 });
 
                 message.success({ content: "Erfolgreich erstellt!", key: "task_new" });
@@ -92,7 +95,7 @@ const NewTask = () => {
                         )}
                     </FormControl>
                     <FormControl my="5">
-                        <FormLabel>FBA Etiket:</FormLabel>
+                        <FormLabel>DHL Etiket:</FormLabel>
 
                         <Input
                             width="8xl"
@@ -110,8 +113,8 @@ const NewTask = () => {
                             isInvalid={formik.touched.dhlEtiket && formik.errors.dhlEtiket}
                         />
 
-                        {formik.touched.fbaEtiket && formik.errors.fbaEtiket && (
-                            <Text color="red.400">{formik.errors.fbaEtiket}</Text>
+                        {formik.touched.dhlEtiket && formik.errors.dhlEtiket && (
+                            <Text color="red.400">{formik.errors.dhlEtiket}</Text>
                         )}
                     </FormControl>
 
