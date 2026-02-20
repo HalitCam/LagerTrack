@@ -1,6 +1,8 @@
 import { useState, createContext, useContext, useEffect } from 'react';
 import { fetchLogout, fetchMe } from '../api';
 import { Flex, Spinner } from '@chakra-ui/react';
+import { fetchUser } from '../api';
+import { useQuery } from '@tanstack/react-query';
 
 const AuthContext = createContext();
 

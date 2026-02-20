@@ -1,3 +1,4 @@
+import { boolean } from 'joi';
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
@@ -34,6 +35,12 @@ const TaskSchema= new Schema({
   },
   completedAt: {
     type :Date,
+  },
+  danger: {
+    type: Boolean,
+  },
+  withoutLabel : {
+    type: Boolean,
   }
 });
 

@@ -7,13 +7,14 @@ const validationNew = yup.object().shape({
     boxquantity : yup.number().required(),
     createdAt : yup.date(),
     responsible : yup.string(),
+    danger: yup.boolean(),
+    withLabel : yup.boolean(),
     fbaEtiket: yup.mixed()
-    .required("Eine PDF-Datei ist erforderlich")
     .test(
       "fileType",
       "Nur PDF-Dateien sind erlaubt",
       (value) => {
-        if (!value) return false;
+        if (!value) return true;
         return value.type === "application/pdf";
       }
     )
@@ -21,7 +22,7 @@ const validationNew = yup.object().shape({
       "fileSize",
       "Die Datei darf maximal 5MB groß sein",
       (value) => {
-        if (!value) return false;
+        if (!value) return true;
         return value.size <= 5 * 1024 * 1024;
       }
     ),

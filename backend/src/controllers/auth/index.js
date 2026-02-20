@@ -146,6 +146,14 @@ const Me = async (req, res, next) => {
 		next(e);
 	}
 };
+const GetList = async(req, res, next)=>{
+	try{
+		const users =await User.find({})
+		res.json(users);
+	} catch (e) {
+		next(e);
+	}
+} 
 
 export default {
 	Register,
@@ -153,4 +161,5 @@ export default {
 	RefreshToken,
 	Logout,
 	Me,
+	GetList,
 };

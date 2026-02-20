@@ -6,9 +6,12 @@ const ProductSchema = Joi.object({
   productquantity: Joi.number().required(),
   boxquantity: Joi.number().required(),
   responsible: Joi.string(),
+  completed : Joi.boolean(),
   createdAt: Joi.date().optional(),
   fbaEtiket: Joi.string().optional(),
   dhlEtiket: Joi.string().optional(),
+  danger: Joi.boolean(),
+  withoutLabel : Joi.boolean(),
 });
 
 export default ProductSchema;

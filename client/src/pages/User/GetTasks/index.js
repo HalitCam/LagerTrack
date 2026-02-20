@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { Table, Popconfirm } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchTask, fetchUpdateTask } from '../../../api';
-import { Text ,Button } from '@chakra-ui/react';
+import { Text, Button } from '@chakra-ui/react';
 import { useAuth } from '../../../contexts/AuthContext';
 import moment from 'moment';
+import { WarningTwoIcon } from "@chakra-ui/icons";
 
 const GetTasks = () => {
     const { user } = useAuth();
@@ -15,13 +16,13 @@ const GetTasks = () => {
     const dataResponsibleFiltered = data?.filter((item) => (item.responsible === user._id && item.completed !== true));
 
     const backTaskMutation = useMutation({
-        mutationFn: ({id,data})=> fetchUpdateTask(id, data),
+        mutationFn: ({ id, data }) => fetchUpdateTask(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin:task']);
         }
     })
 
-    const completeMutation  = useMutation({
+    const completeMutation = useMutation({
         mutationFn: ({ id, data }) => fetchUpdateTask(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries(['user:task']);
@@ -62,12 +63,22 @@ const GetTasks = () => {
             key: 'createdAt',
         },
         {
+            title: 'Etikettenzustand',
+            dataIndex: 'withoutLabel',
+            key: 'withoutLabel',
+        },
+        {
+            title: 'Gefahrgut',
+            dataIndex: 'danger',
+            key: 'danger',
+        },
+        {
             title: 'Aktion',
             dataIndex: 'action',
             key: 'action',
             render: (text, record) => {
                 const giveBackTask = async () => {
-                    backTaskMutation.mutate({id: record._id, data:{responsible : null}})
+                    backTaskMutation.mutate({ id: record._id, data: { responsible: null } })
                 }
 
                 const handleCompleted = async () => {
@@ -77,7 +88,7 @@ const GetTasks = () => {
 
                 return (
                     <>
-                    {record.fbaEtiket && (
+                        {record.fbaEtiket && (
                             <a
                                 href={`${process.env.REACT_APP_BASE_ENDPOINT.replace(/\/$/, '')}/uploads/${encodeURIComponent(record.fbaEtiket)}`}
                                 target="_blank"
@@ -100,9 +111,9 @@ const GetTasks = () => {
                         )}
 
                         <Popconfirm
-                         title="Bestätigen !"
+                            title="Bestätigen !"
                             description="Wirklich fertig?"
-                             okText="Ja"
+                            okText="Ja"
                             cancelText="Nein"
                             onConfirm={handleCompleted}
                         >
@@ -110,16 +121,16 @@ const GetTasks = () => {
 
                         </Popconfirm>
 
-                         <Popconfirm
-                         title="Zurückgeben !"
+                        <Popconfirm
+                            title="Zurückgeben !"
                             description="Aufgabe ablehnen ?"
-                             okText="Ja"
+                            okText="Ja"
                             cancelText="Nein"
                             onConfirm={giveBackTask}
                         >
                             <Button ml={5} colorScheme='red'> ablehnen </Button>
                         </Popconfirm>
-                        
+
                     </>
                 )
             }
@@ -131,7 +142,9 @@ const GetTasks = () => {
             <Text fontSize="2xl" p="5">Meine Aufgaben ({user.username})</Text>
             <Table dataSource={dataResponsibleFiltered.map(item => ({
                 ...item,
-                createdAt: moment(item.createdAt).format('DD/MM/YYYY')
+                createdAt: moment(item.createdAt).format('DD/MM/YYYY'),
+                withoutLabel: item.withoutLabel ? "Ohne (Herstelleretikett) Etikett" : null,
+                danger: item.danger ? <WarningTwoIcon w={8} h={8} color="red.500" /> : null,
             }))} columns={columns} rowKey="_id" />
         </div>
 

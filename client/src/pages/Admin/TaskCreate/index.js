@@ -1,6 +1,6 @@
 import React from 'react';
 import { FieldArray, useFormik } from "formik";
-import { Box, Text, FormControl, FormLabel, Input, Textarea, Button, Flex } from "@chakra-ui/react";
+import { Box, Text, FormControl, FormLabel, Input, Textarea, Button, Flex, Checkbox } from "@chakra-ui/react";
 import validationNew from './validation';
 import { fetchCreateTask } from '../../../api';
 import { message } from "antd";
@@ -16,8 +16,10 @@ const NewTask = () => {
             boxquantity: "",
             createdAt: "",
             reponsible: "",
-            fbaEtiket: null,
+            fbaEtiket: undefined,
             dhlEtiket: null,
+            danger: false,
+            withoutLabel: false,
         },
 
         validationSchema: validationNew,
@@ -33,7 +35,8 @@ const NewTask = () => {
                     createdAt: values.createdAt,
                     fbaEtiket: values.fbaEtiket,
                     dhlEtiket: values.dhlEtiket,
-
+                    danger: values.danger,
+                    withoutLabel: values.withoutLabel,
                 });
 
                 message.success({ content: "Erfolgreich erstellt!", key: "task_new" });
@@ -70,29 +73,69 @@ const NewTask = () => {
                         <Input name='boxquantity' disabled={formik.isSubmitting} type='number' width="8xl" value={formik.values.boxquantity} onChange={formik.handleChange} onBlur={formik.handleBlur} isInvalid={formik.touched.boxquantity && formik.errors.boxquantity} />
                         {formik.touched.boxquantity && formik.errors.boxquantity && <Text color="red.400">{formik.errors.boxquantity}</Text>}
                     </FormControl>
-                    <FormControl my="5">
-                        <FormLabel>FBA Etikett (klein):</FormLabel>
+                    <Flex justifyItems="center" align="center" >
+                        <FormControl my="5">
+                            <Checkbox size="lg"
+                                name="danger"
+                                isDisabled={formik.isSubmitting}
+                                isChecked={formik.values.danger}
+                                onChange={(e) => formik.setFieldValue("danger", e.target.checked)}
+                                sx={{
+                                    "& .chakra-checkbox__control": {
+                                        borderWidth: "3px", // kenar kalınlığı
+                                        borderColor: "red.500", // isteğe bağlı renk
+                                        borderRadius: "4px", // köşeleri hafif yuvarlat
+                                    }
+                                }}
+                            >
+                                Gefahrgut
+                            </Checkbox>
+                        </FormControl>
+                        <FormControl my="5">
+                            <Checkbox size="lg"
+                                name="withoutLabel"
+                                isDisabled={formik.isSubmitting}
+                                isChecked={formik.values.withoutLabel}
+                                onChange={(e) => formik.setFieldValue("withoutLabel", e.target.checked)}
+                                sx={{
+                                    "& .chakra-checkbox__control": {
+                                        borderWidth: "3px", // kenar kalınlığı
+                                        borderColor: "blue.500", // isteğe bağlı renk
+                                        borderRadius: "4px", // köşeleri hafif yuvarlat
+                                    }
+                                }}
+                            >
+                                Ohne Etikett (with Herstelleretikett)
+                            </Checkbox>
+                        </FormControl>
+                    </Flex>
+                    {
+                        formik.values.withoutLabel === false ? (
+                            <FormControl my="5">
+                                <FormLabel>FBA Etikett (klein):</FormLabel>
 
-                        <Input
-                            width="8xl"
-                            name="fbaEtiket"
-                            type="file"
-                            accept="application/pdf"
-                            disabled={formik.isSubmitting}
-                            onChange={(event) => {
-                                formik.setFieldValue(
-                                    "fbaEtiket",
-                                    event.currentTarget.files[0]
-                                );
-                            }}
-                            onBlur={formik.handleBlur}
-                            isInvalid={formik.touched.fbaEtiket && formik.errors.fbaEtiket}
-                        />
+                                <Input
+                                    width="8xl"
+                                    name="fbaEtiket"
+                                    type="file"
+                                    accept="application/pdf"
+                                    disabled={formik.isSubmitting}
+                                    onChange={(event) => {
+                                        formik.setFieldValue(
+                                            "fbaEtiket",
+                                            event.currentTarget.files[0]
+                                        );
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                    isInvalid={formik.touched.fbaEtiket && formik.errors.fbaEtiket}
+                                />
 
-                        {formik.touched.fbaEtiket && formik.errors.fbaEtiket && (
-                            <Text color="red.400">{formik.errors.fbaEtiket}</Text>
-                        )}
-                    </FormControl>
+                                {formik.touched.fbaEtiket && formik.errors.fbaEtiket && (
+                                    <Text color="red.400">{formik.errors.fbaEtiket}</Text>
+                                )}
+                            </FormControl>
+                        ) : null
+                    }
                     <FormControl my="5">
                         <FormLabel>Versandetikett:</FormLabel>
 

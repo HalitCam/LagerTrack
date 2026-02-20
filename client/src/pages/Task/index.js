@@ -7,6 +7,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Link } from "react-router-dom";
 import { useBasketContext } from '../../contexts/BasketContext';
 import moment from 'moment';
+import { boolean } from 'yup';
+import { WarningTwoIcon } from "@chakra-ui/icons";
+
 
 
 
@@ -36,7 +39,7 @@ const Task = () => {
     if (isError) {
         return <div>Error: {error.message}</div>
     }
-
+    
     const columns = [
         {
             title: 'Kartonart',
@@ -62,6 +65,16 @@ const Task = () => {
             title: 'Erstellungszeit',
             dataIndex: 'createdAt',
             key: 'createdAt',
+        },
+         {
+            title: 'Etikettenzustand',
+            dataIndex: 'withoutLabel',
+            key: 'withoutLabel',
+        },
+         {
+            title: 'Gefahrgut',
+            dataIndex: 'danger',
+            key: 'danger',
         },
         ...(loggedIn
             ? [{
@@ -112,7 +125,9 @@ const Task = () => {
                 .filter(item => !item.responsible)
                 .map(item => ({
                     ...item,
-                    createdAt: moment(item.createdAt).format('DD/MM/YYYY')
+                    createdAt: moment(item.createdAt).format('DD/MM/YYYY'),
+                    withoutLabel: item.withoutLabel ?  "Ohne (Herstelleretikett) Etikett " : null,
+                    danger: item.danger ? <WarningTwoIcon w={8} h={8} color="red.500" /> : null,
                 }))} columns={columns} rowKey="_id" />
         </div>
     )

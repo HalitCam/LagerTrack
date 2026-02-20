@@ -81,6 +81,10 @@ export const fetchDeleteTask = async (task_id) => {
     const {data} = await axios.delete(`${process.env.REACT_APP_BASE_ENDPOINT}/task/${task_id}`);
     return data;
 }
+export const fetchUser = async () => {
+    const {data} = await axios.get(`${process.env.REACT_APP_BASE_ENDPOINT}/auth`);
+    return data;
+}
 
 
 
