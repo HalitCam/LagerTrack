@@ -27,7 +27,6 @@ const GetTasks = () => {
             queryClient.invalidateQueries(['user:task']);
         }
     });
-    console.log(data)
 
     if (isLoading) {
         return <div>Loading...</div>

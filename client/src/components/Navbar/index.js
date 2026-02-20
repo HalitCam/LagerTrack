@@ -16,7 +16,7 @@ const Navbar = () => {
   if(isLoading) return (<div>Loading..</div>)
 
   const filteredData = data?.filter((item) => (item.responsible?.toString() === user?._id?.toString() && item.completed !== true));
-  console.log(filteredData)
+  
   const restTask = data?.filter((item)=> (item.responsible === null));
 
   return (
@@ -55,7 +55,7 @@ const Navbar = () => {
           loggedIn && (
             <>
             {
-              user.role === "admin" && (
+              user?.role === "admin" && (
                 <Link to="/task/create" >
                   <Button colorScheme='green' variant="outline">
                       Aufgabe erstellen
@@ -73,7 +73,7 @@ const Navbar = () => {
                 )
               }
                {
-              user.role === "admin" && (
+              user?.role === "admin" && (
                 <Link to="/performance" >
                   <Button colorScheme="orange" variant="outline">
                       Mitarbeiter-Tracking

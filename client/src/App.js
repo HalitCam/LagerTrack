@@ -19,9 +19,10 @@ import Task from './pages/Task';
 import NewTask from './pages/Admin/TaskCreate';
 import GetTasks from './pages/User/GetTasks';
 import EmployeeTracking from './pages/Admin/EmployeeTracking';
+import Error404 from './pages/Error404';
 
 function App() {
-  const { loggedIn } = useAuth();
+ 
   return (
     <Router>
       <div>
@@ -32,20 +33,33 @@ function App() {
           <Routes>
             <Route path="/calender" element={<Calender />} />
             <Route path="/signup" element={<Signup />} />
-
             <Route path="/login" element={<Login />} />
 
             <Route path="/" element={<Home />} />
+            
             <Route path="/profile" element={
-              <ProtectedRoute isAuthenticated={loggedIn}>
+              <ProtectedRoute >
                 <Profile />
               </ProtectedRoute>
             }
             />
             <Route path="/task" element={<Task/>} />
-            <Route path="/task/create" element={<NewTask/>}/>
+
+            <Route path="/task/create" element={
+              <ProtectedRoute adminOnly>
+                <NewTask/>
+              </ProtectedRoute>
+            }
+            />
             <Route path = "/basket" element={<GetTasks/>}/>
-            <Route path="/performance" element ={<EmployeeTracking/>}/> 
+
+            <Route path="/performance" element ={
+              <ProtectedRoute adminOnly>
+                <EmployeeTracking/>
+              </ProtectedRoute>
+            }/> 
+
+            <Route path="*" element ={<Error404/>}/>
 
           </Routes>
         </div>

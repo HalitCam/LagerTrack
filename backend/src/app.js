@@ -5,6 +5,7 @@ import Boom from 'boom';
 import cors from 'cors';
 import limiter from './rate-limiter';
 import routes from './routes';
+import path from 'path';
 
 const app = express();
 
@@ -12,6 +13,9 @@ app.use(cors());
 app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// serve uploaded files
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.use(routes);
 

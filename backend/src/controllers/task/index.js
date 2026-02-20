@@ -3,7 +3,19 @@ import Boom from "boom";
 import ProductSchema from "./validations";
 
 const Create = async (req, res, next) => {
-	const input = req.body;
+	// when files are uploaded via multer they appear in req.files
+	const input = { ...req.body };
+
+	if (req.files) {
+		if (req.files.fbaEtiket && req.files.fbaEtiket[0]) {
+			// store only filename so client can build /uploads/:filename URL
+			input.fbaEtiket = req.files.fbaEtiket[0].filename;
+		}
+		if (req.files.dhlEtiket && req.files.dhlEtiket[0]) {
+			input.dhlEtiket = req.files.dhlEtiket[0].filename;
+		}
+	}
+
 	const { error } = ProductSchema.validate(input);
 
 	if (error) {
@@ -66,7 +78,7 @@ const Delete = async (req, res, next) => {
 	}
 };
 
-const limit = 12;
+const limit = 100;
 const GetList = async (req, res, next) => {
 	let { page } = req.query;
 

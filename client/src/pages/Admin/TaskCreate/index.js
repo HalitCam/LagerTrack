@@ -23,7 +23,6 @@ const NewTask = () => {
         validationSchema: validationNew,
 
         onSubmit: async (values, bag) => {
-            console.log(formik.values);
             message.loading({ content: "Loading...", key: "product_new" });
             try {
                 await fetchCreateTask({
@@ -72,7 +71,7 @@ const NewTask = () => {
                         {formik.touched.boxquantity && formik.errors.boxquantity && <Text color="red.400">{formik.errors.boxquantity}</Text>}
                     </FormControl>
                     <FormControl my="5">
-                        <FormLabel>FBA Etiket:</FormLabel>
+                        <FormLabel>FBA Etikett (klein):</FormLabel>
 
                         <Input
                             width="8xl"
@@ -95,7 +94,7 @@ const NewTask = () => {
                         )}
                     </FormControl>
                     <FormControl my="5">
-                        <FormLabel>DHL Etiket:</FormLabel>
+                        <FormLabel>Versandetikett:</FormLabel>
 
                         <Input
                             width="8xl"

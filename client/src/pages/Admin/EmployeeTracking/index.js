@@ -1,84 +1,41 @@
-import React, { useEffect } from 'react';
-import { Table } from 'antd';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchTask, fetchUpdateTask } from '../../../api';
-import { Text, Button } from '@chakra-ui/react';
-import { useAuth } from '../../../contexts/AuthContext';
-import moment from 'moment';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTask } from '../../../api';
+import { Link } from "react-router-dom";
+import { Tabs } from 'antd';
+import { SyncOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import Task from '../../Task';
+import GetTasks from '../../User/GetTasks';
 
 
 const EmployeeTracking = () => {
-    
-    const { user } = useAuth();
-    const queryClient = useQueryClient();
-    const { isLoading, isError, data, error } = useQuery({ queryKey: ['user:task'], queryFn: fetchTask, refetchOnMount: true });
-    console.log(data)
+    const { isLoading, isError, data, error } = useQuery({ queryKey: ["following-tasks"], queryFn: fetchTask, refetchOnMount: true });
 
-    const dataResponsibleFiltered = data?.filter ((item) => (item.responsible === user._id && item.completed !== true));
+    const ongoingTasks = data?.filter((task) => task.completed !== true && task.responsible !== null);
 
-    const mutation = useMutation({
-        mutationFn: ({ id, data }) => fetchUpdateTask(id, data),
-        onSuccess: () => {
-            queryClient.invalidateQueries(['user:task']);
-        }
-    });
-    console.log(data)
+    const tabs = [
+        { key: "1", label: "Ongoing", icon: SyncOutlined, component: Task },
+        { key: "2", label: "Completed", icon: CheckSquareOutlined, component: GetTasks }
+    ];
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
-    if (isError) {
-        return <div>Error: {error.message}</div>
-    }
-
-    const columns = [
-        {
-            title: 'Kartonart',
-            dataIndex: 'kartonType',
-            key: 'kartonType',
-        },
-        {
-            title: 'Titel',
-            dataIndex: 'title',
-            key: 'title',
-        },
-        {
-            title: 'Produktmenge',
-            dataIndex: 'productquantity',
-            key: 'productquantity',
-        },
-        {
-            title: 'Kartonmenge',
-            dataIndex: 'boxquantity',
-            key: 'boxquantity',
-        },
-        {
-            title: 'Erstellungszeit',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-        },
-        {
-            title: 'Aktion',
-            dataIndex: 'action',
-            key: 'action',
-            render: (text, record) => {
-                const handleCompleted = async () => {
-
-                    mutation.mutate({ id: record._id, data : {completed: true} });
-                };
-
-                return (
-                    <>
-                        <Button onClick={handleCompleted}> fertig </Button>
-                    </>
-                )
-            }
-        },
-    ]
-    
     return (
         <div>
-            EmployeeTracking
+
+            <Tabs
+                defaultActiveKey="1"
+                items={tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    const Component = tab.component;
+
+                    return {
+                        key: tab.key,
+                        label: tab.label,
+                        icon: <Icon />,
+                        children: <Component />
+                    };
+                })}
+            />
+
         </div>
     );
 }

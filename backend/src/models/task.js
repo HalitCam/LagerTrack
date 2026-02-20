@@ -31,7 +31,16 @@ const TaskSchema= new Schema({
   completed:{
     type : Boolean,
     default : false,
+  },
+  completedAt: {
+    type :Date,
   }
+});
+
+// add fields for uploaded PDF paths (optional)
+TaskSchema.add({
+  fbaEtiket: { type: String, default: null },
+  dhlEtiket: { type: String, default: null },
 });
 
 const Task = mongoose.model('task', TaskSchema);
