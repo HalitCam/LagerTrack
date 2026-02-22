@@ -16,7 +16,7 @@ const CompletedTasks = () => {
 
     const filteredTasks = useMemo(() => {
         if (!data) return [];
-        
+
         const completedTasks = data.filter(task => task.completed === true);
         return completedTasks.filter((task) => {
             const dateMatch = selectedDate
@@ -56,7 +56,15 @@ const CompletedTasks = () => {
             </Flex>
             <Text mt={4}>{`Girilen Input: ${title} `} </Text>
             <Text mt={4}>Seçilen Tarih: {selectedDate?.format(dateFormat)}</Text>
-
+            
+<ul>
+                {filteredTasks.map((task) => (
+                    <li>
+                        {task.title}
+                    </li>
+                ))
+                }
+            </ul>
         </div>
     );
 };
