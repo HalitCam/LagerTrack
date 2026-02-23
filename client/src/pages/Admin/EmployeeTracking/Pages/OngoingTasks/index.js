@@ -109,7 +109,10 @@ const OngoingTasks = () => {
                     employee: (users.find(user => user._id === item.responsible)).username
             
                 }))} columns={columns} rowKey="_id" />
+
+                <Text color="red.400" fontSize="xl"  as="bold" >Anzahl der laufenden Aufgaben : {ongoingTasks.length} </Text>
         </div>
+        
     )
         ;
 }

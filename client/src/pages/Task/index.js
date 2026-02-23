@@ -2,17 +2,13 @@ import React, { useEffect } from 'react';
 import { Table, Popconfirm } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchTask, fetchUpdateTask, fetchDeleteTask } from '../../api';
-import { Text, Button } from '@chakra-ui/react';
+import { Text, Button, Input } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from "react-router-dom";
 import { useBasketContext } from '../../contexts/BasketContext';
 import moment from 'moment';
 import { boolean } from 'yup';
 import { WarningTwoIcon } from "@chakra-ui/icons";
-
-
-
-
 
 const Task = () => {
     const { loggedIn, user } = useAuth();
@@ -26,12 +22,18 @@ const Task = () => {
             queryClient.invalidateQueries(['admin:task']);
         }
     });
-    const deleteMutation = useMutation ({
-        mutationFn: (id) => fetchDeleteTask (id) ,
-        onSuccess : () => {
-            queryClient.invalidateQueries("task");
+    const deleteMutation = useMutation({
+        mutationFn: (id) => fetchDeleteTask(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin:task']);
         }
-    })  
+    })
+    const updateIndexMutation = useMutation({
+        mutationFn: (task_id, input) => fetchUpdateTask(task_id, input),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin:task'])
+        }
+    })
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -39,8 +41,24 @@ const Task = () => {
     if (isError) {
         return <div>Error: {error.message}</div>
     }
-    
+
     const columns = [
+        {
+            title: "Priorität",
+            dataIndex: "action1",
+            key: "action1",
+            render: (text, record, index) => {
+                const handlePriority = () =>(
+                        updateIndexMutation.mutate({priority : {index}})
+                    );
+                return (
+                    
+                    <>
+                        <Input onChange={(e)=>e.target.value} value = {index} width="3px"></Input>
+                    </>
+                )   
+            }
+        },
         {
             title: 'Kartonart',
             dataIndex: 'kartonType',
@@ -66,12 +84,12 @@ const Task = () => {
             dataIndex: 'createdAt',
             key: 'createdAt',
         },
-         {
+        {
             title: 'Etikettenzustand',
             dataIndex: 'withoutLabel',
             key: 'withoutLabel',
         },
-         {
+        {
             title: 'Gefahrgut',
             dataIndex: 'danger',
             key: 'danger',
@@ -88,7 +106,7 @@ const Task = () => {
                         takeMutation.mutate({ id: record._id, body: { responsible: user._id } });
                         addToBasket(record._id);
                     };
-                    const deleteTask = async() => {
+                    const deleteTask = async () => {
                         deleteMutation.mutate(record._id);
                     }
 
@@ -98,11 +116,11 @@ const Task = () => {
                             {
                                 user.role === "admin" ? (
                                     <Popconfirm
-                                    title="Wirklich löschen?"
-                                    description="Sind Sie sicher, diese Aufgabe zu löschen?"
-                                    cancelText="Nein" 
-                                    okText="Ja"
-                                    onConfirm={deleteTask}
+                                        title="Wirklich löschen?"
+                                        description="Sind Sie sicher, diese Aufgabe zu löschen?"
+                                        cancelText="Nein"
+                                        okText="Ja"
+                                        onConfirm={deleteTask}
                                     >
                                         <Button ml="5" colorScheme='red' variant="ghost" > Löschen </Button>
                                     </Popconfirm>
@@ -126,7 +144,7 @@ const Task = () => {
                 .map(item => ({
                     ...item,
                     createdAt: moment(item.createdAt).format('DD/MM/YYYY'),
-                    withoutLabel: item.withoutLabel ?  "Ohne (Herstelleretikett) Etikett " : null,
+                    withoutLabel: item.withoutLabel ? "Ohne (Herstelleretikett) Etikett " : null,
                     danger: item.danger ? <WarningTwoIcon w={8} h={8} color="red.500" /> : null,
                 }))} columns={columns} rowKey="_id" />
         </div>
