@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Popconfirm } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchTask, fetchUpdateTask, fetchDeleteTask } from '../../api';
@@ -16,6 +16,8 @@ const Task = () => {
     const queryClient = useQueryClient();
     const { isLoading, isError, data, error } = useQuery({ queryKey: ['admin:task'], queryFn: fetchTask, refetchOnMount: true });
 
+    const [priorityMap, setPriorityMap] = useState({});
+
     const takeMutation = useMutation({
         mutationFn: ({ id, body }) => fetchUpdateTask(id, body),
         onSuccess: () => {
@@ -26,12 +28,17 @@ const Task = () => {
         mutationFn: (id) => fetchDeleteTask(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin:task']);
+            setPriorityMap(prev => {
+                const copy = { ...prev };
+                delete copy[record._id];
+                return copy;
+            });
         }
     })
     const updateIndexMutation = useMutation({
-        mutationFn: (task_id, input) => fetchUpdateTask(task_id, input),
+        mutationFn: ({ task_id, input }) => fetchUpdateTask(task_id, input),
         onSuccess: () => {
-            queryClient.invalidateQueries(['admin:task'])
+            queryClient.invalidateQueries(['task:priority'])
         }
     })
 
@@ -42,22 +49,56 @@ const Task = () => {
         return <div>Error: {error.message}</div>
     }
 
+
     const columns = [
         {
             title: "Priorität",
-            dataIndex: "action1",
-            key: "action1",
-            render: (text, record, index) => {
-                const handlePriority = () =>(
-                        updateIndexMutation.mutate({priority : {index}})
-                    );
-                return (
-                    
-                    <>
-                        <Input onChange={(e)=>e.target.value} value = {index} width="3px"></Input>
-                    </>
-                )   
-            }
+            dataIndex: "priority",
+            key: "priority",
+            render: (text, record) => (
+                <Input
+                    value={
+                        priorityMap[record._id] !== undefined
+                            ? priorityMap[record._id]
+                            : record.priority
+                    }
+                    type="number"
+                    width="60px"
+                    onChange={(e) => {
+                        setPriorityMap(prev => ({
+                            ...prev,
+                            [record._id]: e.target.value
+                        }));
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            const newValue = Number(
+                                priorityMap[record._id] ?? record.priority
+                            );
+
+                            if (isNaN(newValue)) return;
+
+                            updateIndexMutation.mutate({
+                                task_id: record._id,
+                                input: { priority: newValue }
+                            });
+                        }
+                    }}
+                    onBlur={() => {
+                        const newValue = Number(
+                            priorityMap[record._id] ?? record.priority
+                        );
+
+                        if (isNaN(newValue)) return;
+                        if (newValue === record.priority) return;
+
+                        updateIndexMutation.mutate({
+                            task_id: record._id,
+                            input: { priority: newValue }
+                        });
+                    }}
+                />
+            )
         },
         {
             title: 'Kartonart',
