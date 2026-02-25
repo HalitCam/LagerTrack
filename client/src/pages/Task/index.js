@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Popconfirm } from 'antd';
+import { Table, Popconfirm, Flex } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchTask, fetchUpdateTask, fetchDeleteTask } from '../../api';
 import { Text, Button, Input } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Link } from "react-router-dom";
 import { useBasketContext } from '../../contexts/BasketContext';
 import moment from 'moment';
-import { boolean } from 'yup';
 import { WarningTwoIcon } from "@chakra-ui/icons";
+import { Spinner } from '@chakra-ui/react'
 
 const Task = () => {
     const { loggedIn, user } = useAuth();
+    const isAdmin = user?.role === "admin";
     const { addToBasket } = useBasketContext();
     const queryClient = useQueryClient();
     const { isLoading, isError, data, error } = useQuery({ queryKey: ['admin:task'], queryFn: fetchTask, refetchOnMount: true });
 
     const [priorityMap, setPriorityMap] = useState({});
-
+    
     const takeMutation = useMutation({
         mutationFn: ({ id, body }) => fetchUpdateTask(id, body),
         onSuccess: () => {
@@ -28,22 +28,36 @@ const Task = () => {
         mutationFn: (id) => fetchDeleteTask(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin:task']);
-            setPriorityMap(prev => {
-                const copy = { ...prev };
-                delete copy[record._id];
-                return copy;
-            });
+
         }
     })
     const updateIndexMutation = useMutation({
         mutationFn: ({ task_id, input }) => fetchUpdateTask(task_id, input),
-        onSuccess: () => {
-            queryClient.invalidateQueries(['task:priority'])
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries(['admin:task']);
+
+            const { task_id } = variables;
+
+            setPriorityMap(prev => {
+                const copy = { ...prev };
+                delete copy[task_id];
+                return copy;
+            });
         }
     })
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return (
+            <Flex justify="center" align="center" minH="100vh" >
+                <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                />
+            </Flex >
+        )
     }
     if (isError) {
         return <div>Error: {error.message}</div>
@@ -57,13 +71,19 @@ const Task = () => {
             key: "priority",
             render: (text, record) => (
                 <Input
+                    disabled={!isAdmin}
+                    style={{
+                        borderRadius: "100px",
+                        padding: "0 20px",
+                        height: "45px"
+                    }}
+                    color="red.600"
                     value={
                         priorityMap[record._id] !== undefined
                             ? priorityMap[record._id]
                             : record.priority
                     }
-                    type="number"
-                    width="60px"
+                    width="50px"
                     onChange={(e) => {
                         setPriorityMap(prev => ({
                             ...prev,
@@ -144,8 +164,14 @@ const Task = () => {
                     const handleTake = async () => {
                         // set responsible to current user
                         if (!user || !user._id) return;
-                        takeMutation.mutate({ id: record._id, body: { responsible: user._id } });
+                        takeMutation.mutate({
+                            id: record._id, body: {
+                                responsible: user._id,
+                                priority: null
+                            }
+                        });
                         addToBasket(record._id);
+
                     };
                     const deleteTask = async () => {
                         deleteMutation.mutate(record._id);
@@ -155,7 +181,7 @@ const Task = () => {
                         <>
                             <Button colorScheme='green' variant="ghost" onClick={handleTake}> Übernahme</Button>
                             {
-                                user.role === "admin" ? (
+                                user?.role === "admin" ? (
                                     <Popconfirm
                                         title="Wirklich löschen?"
                                         description="Sind Sie sicher, diese Aufgabe zu löschen?"
