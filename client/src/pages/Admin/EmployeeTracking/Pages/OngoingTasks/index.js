@@ -106,7 +106,7 @@ const OngoingTasks = () => {
                     createdAt: moment(item.createdAt).format('DD/MM/YYYY'),
                     withoutLabel: item.withoutLabel ? "Ohne (Herstelleretikett) Etikett " : null,
                     danger: item.danger ? <WarningTwoIcon w={8} h={8} color="red.500" /> : null,
-                    employee: (users.find(user => user._id === item.responsible)).username
+                    employee: (users?.find(user => user._id === item.responsible)).username
             
                 }))} columns={columns} rowKey="_id" />
 

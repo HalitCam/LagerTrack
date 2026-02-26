@@ -12,6 +12,7 @@ const ProductSchema = Joi.object({
   dhlEtiket: Joi.string().optional(),
   danger: Joi.boolean(),
   withoutLabel : Joi.boolean(),
+  priority: Joi.number(),
 });
 
 export default ProductSchema;

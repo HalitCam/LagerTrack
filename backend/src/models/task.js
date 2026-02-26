@@ -41,6 +41,9 @@ const TaskSchema= new Schema({
   },
   withoutLabel : {
     type: Boolean,
+  },
+  priority : {
+    type: Number,
   }
 });
 
