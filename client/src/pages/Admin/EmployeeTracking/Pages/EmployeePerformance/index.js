@@ -5,7 +5,9 @@ import { Flex, Spinner, Text } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { Grid, Col, Row, Statistic } from 'antd';
 import moment from 'moment';
+import DateRangePickerValue from './components/dateRangePicker';
 import {
+    Box,
     Table,
     Thead,
     Tbody,
@@ -146,7 +148,7 @@ const EmployeePerformance = () => {
                             <Statistic
                                 {...statisticSharedProps({ value: completedTasksCount("year") })}
                                 title="Jährlich"
-                                value= {completedTasksCount("year")}
+                                value={completedTasksCount("year")}
                                 styles={{
                                     title: { color: "#838689", fontWeight: 600 },
                                     content: { fontSize: "24px" },
@@ -154,6 +156,9 @@ const EmployeePerformance = () => {
                                 suffix={completedTasksCount("year") <= 1 ? "Aufgabe" : "Aufgaben"}
                             />
                         </Flex>
+                        <Box>
+                            <DateRangePickerValue />
+                        </Box>
                     </Row>
                 </Col>
             </Row>
