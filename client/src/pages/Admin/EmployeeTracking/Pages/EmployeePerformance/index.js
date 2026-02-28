@@ -74,9 +74,9 @@ const EmployeePerformance = () => {
 
     return (
         <div >
-            <Row justify="center" style={{ margin: "7px 0" }}>
+            <Row justify="center" style={{ margin: "10px 0", marginBottom: "50px" }}>
                 <Col>
-                    <Text fontSize="2xl" fontWeight="bold">
+                    <Text fontSize="2xl" fontWeight="bold" boxShadow="lg">
                         Performance
                     </Text>
                 </Col>
@@ -84,7 +84,7 @@ const EmployeePerformance = () => {
             <Row  >
                 <Col span={10}>
                     <TableContainer>
-                        <Table border="2px solid"
+                        <Table border="2px dashed "
                             borderColor="gray.500"
                             borderRadius="md"
                             marginTop="10px">
@@ -156,8 +156,10 @@ const EmployeePerformance = () => {
                                 suffix={completedTasksCount("year") <= 1 ? "Aufgabe" : "Aufgaben"}
                             />
                         </Flex>
-                        <Box>
-                            <DateRangePickerValue />
+                    </Row>
+                    <Row justify="center">
+                        <Box marginTop="25px" >
+                            <DateRangePickerValue backgroundColor="gray.400" size="2xl" />
                         </Box>
                     </Row>
                 </Col>
