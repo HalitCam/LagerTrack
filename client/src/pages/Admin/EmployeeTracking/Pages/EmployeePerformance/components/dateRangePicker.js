@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { DatePicker, Space } from 'antd';
+import { DatePicker, Space, Statistic } from 'antd';
 import dayjs from 'dayjs';
 import { useQuery } from "@tanstack/react-query";
 import { fetchTask } from '../../../../../../api';
+import { Text } from "@chakra-ui/react";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
@@ -11,7 +12,8 @@ const { RangePicker } = DatePicker;
 const DateRangePicker = () => {
     const { isError, isLoading, error, data } = useQuery({
         queryKey: ["datePicker:tasks"],
-        queryFn: fetchTask
+        queryFn: fetchTask,
+        refetchOnMount: true
     });
 
     const [filteredTasks, setFilteredTasks] = useState([]);
@@ -19,21 +21,6 @@ const DateRangePicker = () => {
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error: {error.message}</div>;
 
-    // Tek tarih filtreleme
-    const onChange = (date) => {
-        if (!date) {
-            setFilteredTasks([]);
-            return;
-        }
-
-        const filtered = data?.filter(task =>
-            dayjs(task.completedAt).isSame(date, "day")
-        );
-
-        setFilteredTasks(filtered);
-    };
-
-    // Tarih aralığı filtreleme
     const onRangeChange = (dates) => {
         if (!dates) {
             setFilteredTasks([]);
@@ -42,24 +29,34 @@ const DateRangePicker = () => {
 
         const [start, end] = dates;
 
-        const filtered = data?.filter(task =>
+        const filtered = data?.filter(task => task.completed &&
             dayjs(task.completedAt).isBetween(start, end, "day", "[]")
         );
+        console.log(filtered)
 
         setFilteredTasks(filtered);
     };
 
     return (
         <div>
-            <Space direction="vertical" size={12}>
-                <DatePicker onChange={onChange} />
+            <Space direction="vertical" size={12} >
+                <Text fontSize="large" color="gray.400">(FBA) Erledigte Aufgabenanzahl im Zeitraum</Text>
                 <RangePicker onChange={onRangeChange} />
+                <Text color="gray.500">Aufgabenanzahl im Zeitraum (FBA)</Text>
+                <Statistic style={{
+                    border: "2px dashed #1890ff", // mavi kenarlık, dashed
+                    padding: "12px",
+                    borderRadius: "8px",
+                    display: "flex",
+                    justifyContent: "center"
+
+                }}
+                    title={filteredTasks.length === 0 ? "Aufgabenanzahl im Zeitraum" : null} 
+                    value={filteredTasks.length}
+                    formatter={(value) => (value === 0 ? "" : value)}
+                />
             </Space>
 
-            <div style={{ marginTop: 20 }}>
-                <strong>Filtered Tasks:</strong>
-                <p>{filteredTasks.length} task found</p>
-            </div>
         </div>
     );
 };

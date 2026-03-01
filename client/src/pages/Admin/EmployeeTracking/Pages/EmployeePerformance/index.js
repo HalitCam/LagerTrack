@@ -5,7 +5,7 @@ import { Flex, Spinner, Text } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { Grid, Col, Row, Statistic } from 'antd';
 import moment from 'moment';
-import DateRangePickerValue from './components/dateRangePicker';
+import DateRangePicker from './components/dateRangePicker';
 import {
     Box,
     Table,
@@ -42,12 +42,25 @@ const statisticSharedProps = ({ value }) => {
 
 const EmployeePerformance = () => {
     const { data: tasks, isLoading, isError, error } = useQuery({
-        queryFn: fetchTask, queryKey: ["data:user"]
+        queryFn: fetchTask, queryKey: ["data:user"], refetchOnMount: true,
     });
 
     const { data: user } = useQuery({
         queryFn: fetchUser, queryKey: ["users:performance"]
     });
+    // For Amazon Performance Layout
+    const completedTasks = (interval) => tasks?.filter((task) =>
+        task.completedAt &&
+        moment(task.completedAt).isSame(moment(), interval)
+    )
+
+    const completedTasksCount = (interval) => completedTasks(interval).length;
+
+    const productNumber = (interval) =>
+        completedTasks(interval).reduce((sum, task) => sum + task.productquantity * task.boxquantity, 0);
+
+    const kartonNumber = (interval) =>
+        completedTasks(interval).reduce((sum, task) => sum + task.boxquantity, 0);
 
     if (isLoading) {
         return (
@@ -65,12 +78,6 @@ const EmployeePerformance = () => {
     if (isError) {
         return <div>Error: {error.message}</div>
     }
-    // For Amazon Performance Layout
-
-    const completedTasksCount = (interval) => tasks?.filter((task) =>
-        task.completedAt &&
-        moment(task.completedAt).isSame(moment(), interval)
-    ).length;
 
     return (
         <div >
@@ -101,6 +108,12 @@ const EmployeePerformance = () => {
 
                         </Table>
                     </TableContainer>
+                    <Row justify="center">
+                        <Box marginTop="25px" >
+                            <DateRangePicker backgroundColor="gray.400" size="2xl" />
+                        </Box>
+                    </Row>
+                    <hr style={{ width: "90%", margin: "10 auto" }} />
 
                 </Col>
 
@@ -123,7 +136,7 @@ const EmployeePerformance = () => {
                                     title: { color: "#838689", fontWeight: 600 },
                                     content: { fontSize: "24px" },
                                 }}
-                                suffix={completedTasksCount("day") <= 1 ? "Aufgabe" : "Aufgaben"}
+                                suffix={completedTasksCount("day") <= 1 ? "FBA" : "FBA"}
                             />
                             <Statistic
                                 {...statisticSharedProps({ value: completedTasksCount("week") })}
@@ -133,7 +146,7 @@ const EmployeePerformance = () => {
                                     title: { color: "#838689", fontWeight: 600 },
                                     content: { fontSize: "24px" },
                                 }}
-                                suffix={completedTasksCount("week") <= 1 ? "Aufgabe" : "Aufgaben"}
+                                suffix={completedTasksCount("week") <= 1 ? "FBA" : "FBA"}
                             />
                             <Statistic
                                 {...statisticSharedProps({ value: completedTasksCount("month") })}
@@ -143,7 +156,7 @@ const EmployeePerformance = () => {
                                     title: { color: "#838689", fontWeight: 600 },
                                     content: { fontSize: "24px" },
                                 }}
-                                suffix={completedTasksCount("month") <= 1 ? "Aufgabe" : "Aufgaben"}
+                                suffix={completedTasksCount("month") <= 1 ? "FBA" : "FBA"}
                             />
                             <Statistic
                                 {...statisticSharedProps({ value: completedTasksCount("year") })}
@@ -153,14 +166,105 @@ const EmployeePerformance = () => {
                                     title: { color: "#838689", fontWeight: 600 },
                                     content: { fontSize: "24px" },
                                 }}
-                                suffix={completedTasksCount("year") <= 1 ? "Aufgabe" : "Aufgaben"}
+                                suffix={completedTasksCount("year") <= 1 ? "FBA" : "FBA"}
                             />
                         </Flex>
                     </Row>
                     <Row justify="center">
-                        <Box marginTop="25px" >
-                            <DateRangePickerValue backgroundColor="gray.400" size="2xl" />
-                        </Box>
+                        <Text fontSize="large" color="gray.400">
+                            Kartonanzahl der erledigten Aufgaben (FBA)</Text>
+                    </Row>
+                    <Row justify="center">
+                        <Flex vertical gap="middle">
+                            <Statistic
+                                {...statisticSharedProps({ value: kartonNumber("day") })}
+                                title="Täglich"
+                                value={kartonNumber("day")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={kartonNumber("day") <= 1 ? "Karton" : "Kartons"}
+                            />
+                            <Statistic
+                                {...statisticSharedProps({ value: kartonNumber("week") })}
+                                title="Wöchentlich"
+                                value={kartonNumber("week")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={kartonNumber("week") <= 1 ? "Karton" : "Kartons"}
+                            />
+                            <Statistic
+                                {...statisticSharedProps({ value: kartonNumber("month") })}
+                                title="Monatlich"
+                                value={kartonNumber("month")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={kartonNumber("month") <= 1 ? "Karton" : "Kartons"}
+                            />
+                            <Statistic
+                                {...statisticSharedProps({ value: kartonNumber("year") })}
+                                title="Jährlich"
+                                value={kartonNumber("year")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={kartonNumber("year") <= 1 ? "Karton" : "Kartons"}
+                            />
+                        </Flex>
+                    </Row>
+                    <Row justify="center">
+                        <Text fontSize="large" color="gray.400">
+                            Anzahl der erledigten Produkte (FBA)</Text>
+                    </Row>
+                    <Row justify="center">
+                        <Flex vertical gap="middle">
+                            <Statistic
+                                {...statisticSharedProps({ value: productNumber("day") })}
+                                title="Täglich"
+                                value={productNumber("day")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={productNumber("day") <= 1 ? "Produkt" : "Produkte"}
+                            />
+                            <Statistic
+                                {...statisticSharedProps({ value: productNumber("week") })}
+                                title="Wöchentlich"
+                                value={productNumber("week")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={productNumber("week") <= 1 ? "Produkt" : "Produkte"}
+                            />
+                            <Statistic
+                                {...statisticSharedProps({ value: productNumber("month") })}
+                                title="Monatlich"
+                                value={productNumber("month")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={productNumber("month") <= 1 ? "Produkt" : "Produkte"}
+                            />
+                            <Statistic
+                                {...statisticSharedProps({ value: productNumber("year") })}
+                                title="Jährlich"
+                                value={productNumber("year")}
+                                styles={{
+                                    title: { color: "#838689", fontWeight: 600 },
+                                    content: { fontSize: "24px" },
+                                }}
+                                suffix={productNumber("year") <= 1 ? "Produkt" : "Produkte"}
+                            />
+                        </Flex>
                     </Row>
                 </Col>
             </Row>
