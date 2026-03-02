@@ -19,6 +19,7 @@ import Task from './pages/Task';
 import NewTask from './pages/Admin/TaskCreate';
 import GetTasks from './pages/User/GetTasks';
 import EmployeeTracking from './pages/Admin/EmployeeTracking';
+import IndividualEmployee from './pages/Admin/EmployeeTracking/Pages/EmployeePerformance/IndividualEmployee';
 import Error404 from './pages/Error404';
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
                 <EmployeeTracking/>
               </ProtectedRoute>
             }/> 
+            <Route path= {"/performance/:id"} element ={<IndividualEmployee/>}></Route>
 
             <Route path="*" element ={<Error404/>}/>
 
