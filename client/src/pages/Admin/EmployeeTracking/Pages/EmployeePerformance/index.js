@@ -48,6 +48,7 @@ const EmployeePerformance = () => {
     const { data: user } = useQuery({
         queryFn: fetchUser, queryKey: ["users:performance"]
     });
+
     // For Amazon Performance Layout
     const completedTasks = (interval) => tasks?.filter((task) =>
         task.completedAt &&
@@ -110,7 +111,9 @@ const EmployeePerformance = () => {
                     </TableContainer>
                     <Row justify="center">
                         <Box marginTop="25px" >
-                            <DateRangePicker backgroundColor="gray.400" size="2xl" />
+                            <DateRangePicker 
+                            data = {tasks}
+                            backgroundColor="gray.400" size="2xl" />
                         </Box>
                     </Row>
                     <hr style={{ width: "90%", margin: "10 auto" }} />

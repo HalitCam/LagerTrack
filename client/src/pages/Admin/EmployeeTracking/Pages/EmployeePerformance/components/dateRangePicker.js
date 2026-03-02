@@ -9,17 +9,9 @@ dayjs.extend(isBetween);
 
 const { RangePicker } = DatePicker;
 
-const DateRangePicker = () => {
-    const { isError, isLoading, error, data } = useQuery({
-        queryKey: ["datePicker:tasks"],
-        queryFn: fetchTask,
-        refetchOnMount: true
-    });
+const DateRangePicker = ({data}) => {
 
     const [filteredTasks, setFilteredTasks] = useState([]);
-
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Error: {error.message}</div>;
 
     const onRangeChange = (dates) => {
         if (!dates) {
@@ -32,7 +24,6 @@ const DateRangePicker = () => {
         const filtered = data?.filter(task => task.completed &&
             dayjs(task.completedAt).isBetween(start, end, "day", "[]")
         );
-        console.log(filtered)
 
         setFilteredTasks(filtered);
     };
@@ -44,7 +35,7 @@ const DateRangePicker = () => {
                 <RangePicker onChange={onRangeChange} />
                 <Text color="gray.500">Aufgabenanzahl im Zeitraum (FBA)</Text>
                 <Statistic style={{
-                    border: "2px dashed #1890ff", // mavi kenarlık, dashed
+                    border: "2px dashed #1890ff",
                     padding: "12px",
                     borderRadius: "8px",
                     display: "flex",
@@ -52,7 +43,7 @@ const DateRangePicker = () => {
 
                 }}
                     title={filteredTasks.length === 0 ? "Aufgabenanzahl im Zeitraum" : null} 
-                    value={filteredTasks.length}
+                    value={filteredTasks.length ?? 0}
                     formatter={(value) => (value === 0 ? "" : value)}
                 />
             </Space>

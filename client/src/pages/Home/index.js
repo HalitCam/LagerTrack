@@ -45,7 +45,7 @@ const Home = () => {
                 />
             </Box>
             <Box>
-                <Wrap justify="center"
+                <Wrap justify="left" ml="20px"
                     align="center"
                     py={4}
                     borderTop="2px solid"

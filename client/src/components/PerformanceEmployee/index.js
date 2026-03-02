@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Space, Table, Tag, col, Row } from 'antd';
+import { Table, Col, Row } from 'antd';
 import dayjs from 'dayjs';
 import isBetween from "dayjs/plugin/isBetween";
 import { color } from 'framer-motion';
@@ -120,8 +120,8 @@ const PerformanceEmployee = ({ tasks, user }) => {
 
     return (
         <div >
-            <Row>
-                <col-8>
+            <Row gutter={80}> 
+                <Col span={8}>
                     <Table dataSource={data1} pagination={false} bordered>
                         <ColumnGroup title="Anzahl der erledigten Aufgaben (FBA)">
                             <Column title="Zeitraum" dataIndex="interval" key="interval" />
@@ -129,28 +129,28 @@ const PerformanceEmployee = ({ tasks, user }) => {
                             <Column title="Mit Etikett" dataIndex="withLabel" key="withLabel" />
                         </ColumnGroup>
                     </Table>
-                </col-8>
-                <col-8>
-                    <Table dataSource={data2} pagination={false} bordered >
+                </Col>
+
+                <Col span={8}>
+                    <Table dataSource={data2} pagination={false} bordered>
                         <ColumnGroup title="Kartonanzahl der erledigten Aufgaben (FBA)">
                             <Column title="Zeitraum" dataIndex="interval" key="interval" />
                             <Column title="Ohne Etikett " dataIndex="withoutLabel" key="withoutLabel" />
                             <Column title="Mit Etikett" dataIndex="withLabel" key="withLabel" />
                         </ColumnGroup>
                     </Table>
-                </col-8>
-                <col-8>
-                    <Table dataSource={data3} pagination={false} bordered  >
+                </Col>
+
+                <Col span={8}>
+                    <Table dataSource={data3} pagination={false} bordered>
                         <ColumnGroup title="Anzahl der erledigten Produkte (FBA)">
                             <Column title="Zeitraum" dataIndex="interval" key="interval" />
                             <Column title="Ohne Etikett " dataIndex="withoutLabel" key="withoutLabel" />
                             <Column title="Mit Etikett" dataIndex="withLabel" key="withLabel" />
                         </ColumnGroup>
                     </Table>
-                </col-8>
+                </Col>
             </Row>
-
-
 
         </div>
     );
