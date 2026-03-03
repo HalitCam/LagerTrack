@@ -7,8 +7,6 @@ import { Text, Flex, Spinner, } from '@chakra-ui/react';
 import { Row, Col } from 'antd';
 import DateRangePicker from '../components/dateRangePicker';
 
-
-
 const IndividualEmployee = () => {
     const { data: tasks, isLoading, error, isError } = useQuery({
         queryKey: ["tasks:invidual"],
@@ -60,9 +58,6 @@ const IndividualEmployee = () => {
             <Flex justify="center" align="center" mt={35} >
                 <DateRangePicker data={tasksBy} />
             </Flex>
-
-
-
         </div>
     );
 }

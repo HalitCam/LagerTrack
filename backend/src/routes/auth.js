@@ -10,5 +10,6 @@ router.post('/refresh_token', auth.RefreshToken);
 router.post('/logout', auth.Logout);
 router.get('/me', verifyAccessToken, auth.Me);
 router.get('/', auth.GetList )
+router.put("/:_id", auth.Update);
 
 export default router;

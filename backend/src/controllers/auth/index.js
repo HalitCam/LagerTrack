@@ -154,6 +154,19 @@ const GetList = async(req, res, next)=>{
 		next(e);
 	}
 } 
+const Update = async (req, res, next) => {
+	const { _id, input } = req.body;
+
+	try {
+		const updated = await User.findByIdAndUpdate(_id, input, {
+			new: true,
+		});
+
+		res.json(updated);
+	} catch (e) {
+		next(e);
+	}
+};
 
 export default {
 	Register,
@@ -162,4 +175,5 @@ export default {
 	Logout,
 	Me,
 	GetList,
+	Update,
 };

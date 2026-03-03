@@ -85,6 +85,9 @@ export const fetchUser = async () => {
     const {data} = await axios.get(`${process.env.REACT_APP_BASE_ENDPOINT}/auth`);
     return data;
 }
-
+export const fetchUpdateUser = async (id, input) =>{
+    const {data} = await axios.put(`${process.env.REACT_APP_BASE_ENDPOINT}/auth/${id}`, input);
+    return data;
+}
 
 
