@@ -7,9 +7,11 @@ ac.grant('user')
 
 ac.grant('admin')
   .extend('user')
+  .updateAny('user')
   .createAny('task')
   .updateAny('task')
   .deleteAny('task')
-  .readAny('task');
+  .readAny('task')
+  .deleteAny('user');
 
 export const roles = ac;

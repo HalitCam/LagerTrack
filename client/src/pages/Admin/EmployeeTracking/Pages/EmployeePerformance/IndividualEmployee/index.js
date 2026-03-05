@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTask, fetchUser } from '../../../../../../api';
 import PerformanceEmployee from '../../../../../../components/PerformanceEmployee/index';
-import { Text, Flex, Spinner, } from '@chakra-ui/react';
+import { Text, Flex, Spinner, Box } from '@chakra-ui/react';
 import { Row, Col } from 'antd';
 import DateRangePicker from '../components/dateRangePicker';
+import IllnessReportsDisplay from '../../../../../../components/IllnessReportsDisplay';
 
 const IndividualEmployee = () => {
     const { data: tasks, isLoading, error, isError } = useQuery({
@@ -49,7 +50,7 @@ const IndividualEmployee = () => {
                     m={10}
                     textShadow="1px 1px 2px gray"
                 >
-                    {user.username}s Leistung
+                    {user?.username}s Leistung
                 </Text>
             )}
             <Flex justify="center" align="center" >
@@ -58,6 +59,20 @@ const IndividualEmployee = () => {
             <Flex justify="center" align="center" mt={35} >
                 <DateRangePicker data={tasksBy} />
             </Flex>
+            <Box my="20px">
+                 <Text
+                    fontSize="2xl"
+                    color="red.400"
+                    textAlign="center"
+                    m={10}
+                    textShadow="1px 1px 2px gray"
+                >
+                    {user?.username}s Krankmeldungen
+                </Text>
+                <Flex justify="center" align="center" >
+                    <IllnessReportsDisplay user={user}/>
+                </Flex>
+            </Box>
         </div>
     );
 }

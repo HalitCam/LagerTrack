@@ -155,10 +155,12 @@ const GetList = async(req, res, next)=>{
 	}
 } 
 const Update = async (req, res, next) => {
-	const { _id, input } = req.body;
+	
+	const  input  = req.body;
+	const {id} = req.params;
 
 	try {
-		const updated = await User.findByIdAndUpdate(_id, input, {
+		const updated = await User.findByIdAndUpdate(id, input, {
 			new: true,
 		});
 
@@ -168,6 +170,21 @@ const Update = async (req, res, next) => {
 	}
 };
 
+const Delete = async (req,res,next) =>{
+	const {id} = req.params;
+	console.log("userID:",id);
+	try {
+		const deleted = await User.findByIdAndDelete(id);
+		if(!deleted){
+			throw Boom.badRequest("User not found !")
+		}
+		res.json(deleted);
+
+	} catch (error) {
+		next(error);
+	}
+}
+
 export default {
 	Register,
 	Login,
@@ -176,4 +193,5 @@ export default {
 	Me,
 	GetList,
 	Update,
+	Delete,
 };

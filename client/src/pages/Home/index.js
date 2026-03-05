@@ -28,7 +28,7 @@ const Home = () => {
             minHeight: "100vh",
             display: "flex",
             flexDirection: "column",
-            flex:"1", overflow:"hidden", maxH:"20vh"
+            flex:"1", overflowY:"auto", maxH:"20vh"
         }} >
             <Text boxShadow='xs' bg='gray.50' color='#484242' fontSize='2xl' display='flex' itemsAlign="center" justifyContent="center" >Schön, dass du da bist..</Text>
 

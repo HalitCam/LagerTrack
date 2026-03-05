@@ -90,4 +90,8 @@ export const fetchUpdateUser = async (id, input) =>{
     return data;
 }
 
+export const fetchDeleteUser = async (user_id) =>{
+    const {data} = await axios.delete(`${process.env.REACT_APP_BASE_ENDPOINT}/auth/${user_id}`);
+    return data;
+}
 

@@ -20,6 +20,9 @@ const UserSchema = new Schema({
 		default: "user",
 		enum: ["user", "admin"],
 	},
+	illnessReports:{
+		type : Array,
+	}
 });
 
 UserSchema.pre("save", async function (next) {
