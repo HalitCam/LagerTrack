@@ -40,7 +40,7 @@ const IllnessReportsDisplay = ({user}) => {;
                     </Tbody>
                     <Tfoot>
                         <Tr>
-                            <Th>Gesamtkranktage :</Th>
+                            <Th>Gesamtkranktage : </Th>
                             <Th></Th>
                             <Th isNumeric>{user.illnessReports.reduce((acc,report) => (acc+dayjs(report.illnessEnd).diff(dayjs(report.illnessStart), "day")+1), 0) }</Th>
                         </Tr>
