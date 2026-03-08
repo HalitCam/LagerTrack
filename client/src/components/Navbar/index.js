@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import lagericon from '../../image/lagericon.png';
 import { Button, Image } from "@chakra-ui/react"
