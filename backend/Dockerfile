@@ -1,5 +1,5 @@
 FROM node:22-slim
-WORKDIR /opt/backend
+WORKDIR /opt/amazon-lager/backend
 COPY . . 
 RUN npm install
 RUN npm run build

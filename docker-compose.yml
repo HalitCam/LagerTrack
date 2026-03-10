@@ -1,0 +1,38 @@
+version: "3.4"
+services:
+  backend-server:
+    container_name : backend-server
+    build: ./backend
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - uploads:/uploads
+
+  mongodb : 
+    container_name: mongo-server
+    image : mongo
+    ports : 
+      - 27018:27017
+    volumes:
+      - amazon-data:/data/db
+  redis :
+    container_name: redis-server
+    image : redis
+    ports : 
+      - 6379:6379  
+  client-server:
+   container_name : client_server
+   build: ./client
+   depends_on: 
+    - backend-server
+   ports:
+    - 3000:3000
+volumes:
+  amazon-data:
+  uploads:
+
+   
+  
