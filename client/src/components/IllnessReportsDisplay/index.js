@@ -29,7 +29,7 @@ const IllnessReportsDisplay = ({user}) => {;
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {user.illnessReports.map(report => (
+                        {user?.illnessReports.map(report => (
                             <Tr>
                                 <Td>{dayjs(report.illnessStart).format("DD-MM-YYYY")}</Td>
                                 <Td>{dayjs(report.illnessEnd).format("DD-MM-YYYY")}</Td>
@@ -42,7 +42,7 @@ const IllnessReportsDisplay = ({user}) => {;
                         <Tr>
                             <Th>Gesamtkranktage : </Th>
                             <Th></Th>
-                            <Th isNumeric>{user.illnessReports.reduce((acc,report) => (acc+dayjs(report.illnessEnd).diff(dayjs(report.illnessStart), "day")+1), 0) }</Th>
+                            <Th isNumeric>{user?.illnessReports.reduce((acc,report) => (acc+dayjs(report.illnessEnd).diff(dayjs(report.illnessStart), "day")+1), 0) }</Th>
                         </Tr>
                     </Tfoot>
                 </Table>

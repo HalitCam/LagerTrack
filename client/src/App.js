@@ -34,9 +34,9 @@ function App() {
           <Routes>
             <Route path="/calender" element={<Calender />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
+            <Route exact path="/login" element={<Login />} />
 
-            <Route path="/" element={<Home />} />
+            <Route exact path="/" element={<Home />} />
             
             <Route path="/profile" element={
               <ProtectedRoute >
